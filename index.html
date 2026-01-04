@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="hr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OddsLab – Kvote & Live</title>
+  <meta name="description" content="Demo sportsbook UI: sport, live, promocije i listić." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logoMark" aria-hidden="true"></div>
+        <div class="brandText">
+          <div class="brandName">OddsLab</div>
+          <div class="brandTag">kvote • live • tipovi</div>
+        </div>
+      </div>
+
+      <div class="topActions">
+        <div class="pill" title="Status">
+          <span class="dot live"></span>
+          <span id="statusText">LIVE</span>
+        </div>
+
+        <button class="btn ghost" id="openLoginBtn">Prijava</button>
+        <button class="btn" id="openBetslipBtn">
+          Listić <span class="badge" id="betslipCount">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Nav -->
+    <nav class="nav">
+      <a class="navLink" href="#sport" data-route="sport">Sport</a>
+      <a class="navLink" href="#live" data-route="live">Uživo</a>
+      <a class="navLink" href="#promo" data-route="promo">Promocije</a>
+      <a class="navLink" href="#racun" data-route="racun">Račun</a>
+    </nav>
+
+    <!-- Main -->
+    <main class="main">
+      <!-- Left column -->
+      <section class="panel left">
+        <div class="panelHeader">
+          <div class="panelTitle">Tržišta</div>
+          <div class="panelSub">Brzo filtriranje</div>
+        </div>
+
+        <div class="chips" id="sportChips">
+          <button class="chip active" data-sport="ALL">Sve</button>
+          <button class="chip" data-sport="FOOTBALL">Nogomet</button>
+          <button class="chip" data-sport="BASKET">Košarka</button>
+          <button class="chip" data-sport="TENNIS">Tenis</button>
+          <button class="chip" data-sport="ESPORT">eSport</button>
+        </div>
+
+        <div class="searchBox">
+          <input id="searchInput" type="search" placeholder="Traži tim/ligu (npr. Dinamo, Premier...)" />
+        </div>
+
+        <div class="smallToggles">
+          <label class="toggle">
+            <input type="checkbox" id="onlyLiveToggle" />
+            <span>Prikaži samo LIVE</span>
+          </label>
+
+          <label class="toggle">
+            <input type="checkbox" id="onlyTopToggle" />
+            <span>Samo TOP parovi</span>
+          </label>
+        </div>
+
+        <div class="miniNote">
+          <div class="kpi">
+            <div class="kpiLabel">Aktivnih parova</div>
+            <div class="kpiValue" id="kpiMatches">0</div>
+          </div>
+          <div class="kpi">
+            <div class="kpiLabel">U listiću</div>
+            <div class="kpiValue" id="kpiSlip">0</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Center column -->
+      <section class="panel center">
+        <!-- Route: SPORT -->
+        <div class="route" id="route-sport">
+          <div class="routeHeader">
+            <div>
+              <div class="routeTitle">Sport</div>
+              <div class="routeSub">Pre-match ponuda • 1X2 tržišta</div>
+            </div>
+            <div class="routeRight">
+              <button class="btn ghost sm" id="refreshBtn">Osvježi</button>
+            </div>
+          </div>
+
+          <div class="list" id="matchList"></div>
+        </div>
+
+        <!-- Route: LIVE -->
+        <div class="route hidden" id="route-live">
+          <div class="routeHeader">
+            <div>
+              <div class="routeTitle">Uživo</div>
+              <div class="routeSub">Simulacija live tickera (demo)</div>
+            </div>
+            <div class="routeRight">
+              <div class="pill">
+                <span class="dot live"></span>
+                <span id="livePulse">Ažurira se</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="liveGrid" id="liveGrid"></div>
+        </div>
+
+        <!-- Route: PROMO -->
+        <div class="route hidden" id="route-promo">
+          <div class="routeHeader">
+            <div>
+              <div class="routeTitle">Promocije</div>
+              <div class="routeSub">Custom kartice • bez brend copyja</div>
+            </div>
+          </div>
+
+          <div class="promoGrid">
+            <article class="promoCard">
+              <div class="promoTop">
+                <div class="promoChip">BOOST</div>
+                <div class="promoTitle">Kvote Booster</div>
+              </div>
+              <p class="promoText">Dodaj 3+ para i dobiješ boost na ukupnu kvotu (demo UI).</p>
+              <button class="btn sm" data-add-demo="booster">Aktiviraj</button>
+            </article>
+
+            <article class="promoCard">
+              <div class="promoTop">
+                <div class="promoChip">CASH</div>
+                <div class="promoTitle">Cashout Sim</div>
+              </div>
+              <p class="promoText">Prikaži “Cashout” opciju na live parovima (samo vizual).</p>
+              <button class="btn sm" data-add-demo="cashout">Uključi</button>
+            </article>
+
+            <article class="promoCard">
+              <div class="promoTop">
+                <div class="promoChip">FREE</div>
+                <div class="promoTitle">FreeBet Token</div>
+              </div>
+              <p class="promoText">Dodaj demo token u listić i vidi kako se računa uplata.</p>
+              <button class="btn sm" data-add-demo="freebet">Dodaj</button>
+            </article>
+          </div>
+        </div>
+
+        <!-- Route: RAČUN -->
+        <div class="route hidden" id="route-racun">
+          <div class="routeHeader">
+            <div>
+              <div class="routeTitle">Račun</div>
+              <div class="routeSub">Login panel (demo), postavke i limit (UI)</div>
+            </div>
+          </div>
+
+          <div class="accountGrid">
+            <div class="card">
+              <div class="cardTitle">Profil</div>
+              <div class="row">
+                <div class="label">Status</div>
+                <div class="value" id="accountStatus">Gost</div>
+              </div>
+              <div class="row">
+                <div class="label">Valuta</div>
+                <div class="value">EUR</div>
+              </div>
+              <div class="row">
+                <div class="label">Tema</div>
+                <div class="value">Dark</div>
+              </div>
+              <button class="btn sm ghost" id="openLoginBtn2">Prijava / Odjava</button>
+            </div>
+
+            <div class="card">
+              <div class="cardTitle">Odgovorno igranje (UI)</div>
+              <p class="muted">Ovo je demo layout: postavi dnevni limit uplate (ne sprema ništa).</p>
+              <label class="field">
+                <span>Dnevni limit (EUR)</span>
+                <input type="number" min="0" step="5" placeholder="npr. 20" />
+              </label>
+              <button class="btn sm">Spremi (demo)</button>
+            </div>
+          </div>
+        </div>
+
+        <footer class="footer">
+          © <span id="year"></span> OddsLab • Demo UI • Nije prava kladionica
+        </footer>
+      </section>
+
+      <!-- Right column: desktop betslip -->
+      <aside class="panel right" id="betslipDesktop">
+        <div class="panelHeader">
+          <div class="panelTitle">Listić</div>
+          <div class="panelSub">Klikni kvotu da dodaš</div>
+        </div>
+
+        <div class="slipList" id="slipList"></div>
+
+        <div class="slipBox">
+          <label class="field">
+            <span>Ulog (EUR)</span>
+            <input id="stakeInput" type="number" min="0" step="1" placeholder="npr. 5" />
+          </label>
+
+          <label class="toggle">
+            <input type="checkbox" id="freebetToggle" />
+            <span>FreeBet token (demo)</span>
+          </label>
+
+          <div class="summary">
+            <div class="sumRow"><span>Ukupna kvota</span><strong id="totalOdds">1.00</strong></div>
+            <div class="sumRow"><span>Mogući dobitak</span><strong id="payout">0.00</strong></div>
+          </div>
+
+          <button class="btn wide" id="placeBetBtn">Uplati (demo)</button>
+          <button class="btn wide ghost" id="clearSlipBtn">Očisti listić</button>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Mobile betslip drawer -->
+    <div class="drawer hidden" id="betslipDrawer" aria-hidden="true">
+      <div class="drawerSheet">
+        <div class="drawerHeader">
+          <div class="drawerTitle">Listić</div>
+          <button class="btn ghost sm" id="closeDrawerBtn">Zatvori</button>
+        </div>
+
+        <div class="slipList" id="slipListMobile"></div>
+
+        <div class="slipBox">
+          <label class="field">
+            <span>Ulog (EUR)</span>
+            <input id="stakeInputMobile" type="number" min="0" step="1" placeholder="npr. 5" />
+          </label>
+
+          <label class="toggle">
+            <input type="checkbox" id="freebetToggleMobile" />
+            <span>FreeBet token (demo)</span>
+          </label>
+
+          <div class="summary">
+            <div class="sumRow"><span>Ukupna kvota</span><strong id="totalOddsMobile">1.00</strong></div>
+            <div class="sumRow"><span>Mogući dobitak</span><strong id="payoutMobile">0.00</strong></div>
+          </div>
+
+          <button class="btn wide" id="placeBetBtnMobile">Uplati (demo)</button>
+          <button class="btn wide ghost" id="clearSlipBtnMobile">Očisti listić</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login modal -->
+    <div class="modal hidden" id="loginModal" aria-hidden="true">
+      <div class="modalCard" role="dialog" aria-modal="true">
+        <div class="modalHeader">
+          <div>
+            <div class="modalTitle">Prijava</div>
+            <div class="modalSub">Demo modal (ne šalje podatke)</div>
+          </div>
+          <button class="btn ghost sm" id="closeLoginBtn">Zatvori</button>
+        </div>
+
+        <div class="modalBody">
+          <label class="field">
+            <span>Email</span>
+            <input type="email" placeholder="ti@primjer.com" />
+          </label>
+          <label class="field">
+            <span>Lozinka</span>
+            <input type="password" placeholder="••••••••" />
+          </label>
+
+          <div class="modalActions">
+            <button class="btn wide" id="loginBtn">Prijavi se (demo)</button>
+            <button class="btn wide ghost" id="logoutBtn">Odjavi se</button>
+          </div>
+
+          <p class="muted tiny">
+            Napomena: ovo je samo UI demo. Ne radi stvarnu prijavu niti klađenje.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast" aria-live="polite"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
